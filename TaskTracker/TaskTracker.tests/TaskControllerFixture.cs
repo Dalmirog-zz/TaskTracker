@@ -11,7 +11,7 @@ namespace TaskTracker.Tests
         [Test]
         public void Can_Get_All_Tasks()
         {
-            var controller = new TaskController();
+            var controller = new TasksController();
             var allTasks = controller.Get().ToList();
 
             Assert.That(allTasks, Has.Count.GreaterThan(0));
@@ -22,7 +22,7 @@ namespace TaskTracker.Tests
         {
             const int id = 1;
 
-            var controller = new TaskController();
+            var controller = new TasksController();
             var task = controller.Get(id);
 
             Assert.That(task.Id, Is.EqualTo(id));
