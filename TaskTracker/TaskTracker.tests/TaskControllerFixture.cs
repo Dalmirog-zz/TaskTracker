@@ -18,7 +18,7 @@ namespace TaskTracker.Tests
         }
 
         [Test]
-        public void Can_Get_Transit_Route_By_Id()
+        public void Can_Get_Task_By_Id()
         {
             const int id = 1;
 
