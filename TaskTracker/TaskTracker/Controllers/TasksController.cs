@@ -7,11 +7,11 @@ using TaskTracker.Models;
 
 namespace TaskTracker.Controllers
 {
-    public class TaskController : ApiController
+    public class TasksController : ApiController
     {
         private readonly List<Task> tasks = new List<Task>();
 
-        public TaskController()
+        public TasksController()
         {
             tasks.Add(new Task { Id = 1, Name = "TenderTicket", Description = "http://Tender.com/tickets/1" });
             tasks.Add(new Task { Id = 2, Name = "HelpScoutTicket", Description = "http://HelpScout.com/tickets/1" });
