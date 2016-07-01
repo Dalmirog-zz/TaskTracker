@@ -6,7 +6,7 @@ namespace TaskTracker.Tests
 {
 
     [TestFixture]
-    public class TaskControllerFixture
+    public class TasksControllerFixture
     {
         [Test]
         public void Can_Get_All_Tasks()
