@@ -7,25 +7,18 @@ namespace TaskTracker.Controllers
 {
     public class TagsController : ApiController
     {
-        private readonly List<Tag> tags = new List<Tag>();
-
-        public TagsController()
-        {
-            tags.Add(new Tag { Id = 1, Name = "HelpScout" });
-            tags.Add(new Tag { Id = 2, Name = "Tender" });
-            tags.Add(new Tag { Id = 3, Name = "Documentation" });
-        }
+        private readonly Repository _repository = new Repository();
 
         // GET: api/Tags
-        public IEnumerable<Tag> Get()
+        public List<Tag> Get()
         {
-            return tags;
+            return _repository.Tags.GetAll();
         }
 
         // GET: api/Tags/5
         public Tag Get(int id)
         {
-            return tags.FirstOrDefault(t => t.Id == id);
+            return _repository.Tags.Find(id);
         }
 
         // POST: api/Tags

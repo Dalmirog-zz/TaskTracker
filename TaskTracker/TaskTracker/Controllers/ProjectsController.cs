@@ -10,25 +10,18 @@ namespace TaskTracker.Controllers
 {
     public class ProjectsController : ApiController
     {
-        private readonly List<Project> projects = new List<Project>();
-
-        public ProjectsController()
-        {
-            projects.Add(new Project { Id = 1, Name = "OctopusSupport", Description = "http://Tender.com/tickets/1" });
-            projects.Add(new Project { Id = 2, Name = "TaskTrackerDev", Description = "http://HelpScout.com/tickets/1" });
-            projects.Add(new Project { Id = 3, Name = "OctoposhDev", Description = "Reviewed backlog with #Team-Awesome" });
-        }
+        private readonly Repository _repository = new Repository();
 
         // GET: api/Projects
-        public IEnumerable<Project> Get()
+        public List<Project> Get()
         {
-            return projects;
+            return _repository.Projects.GetAll();
         }
 
         // GET: api/Projects/5
         public Project Get(int id)
         {
-            return projects.FirstOrDefault(p => p.Id == id);
+            return _repository.Projects.Find(id);
         }
 
         // POST: api/Projects
