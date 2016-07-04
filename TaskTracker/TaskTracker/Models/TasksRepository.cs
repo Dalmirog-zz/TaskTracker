@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
+using Dapper;
 
 namespace TaskTracker.Models
 {
@@ -24,7 +25,7 @@ namespace TaskTracker.Models
 
         public List<Task> GetAll()
         {
-            throw new NotImplementedException();
+            return this.db.Query<Task>("Select * FROM Tasks").ToList();
         }
 
         public Task Add(Task resource)
