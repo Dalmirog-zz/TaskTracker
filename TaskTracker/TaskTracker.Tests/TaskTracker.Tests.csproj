@@ -61,6 +61,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ProjectsControllerFixture.cs" />
+    <Compile Include="ProjectsRepositoryFixture.cs" />
     <Compile Include="TasksControllerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
