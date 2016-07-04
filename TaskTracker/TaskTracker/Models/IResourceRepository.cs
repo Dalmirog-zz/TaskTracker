@@ -6,13 +6,12 @@ using System.Threading.Tasks;
 
 namespace TaskTracker.Models
 {
-    public interface IRepository<T>
+    public interface IResourceRepository<T>
     {
         T Find(int id);
         List<T> GetAll();
         T Add(T resource);
         T Update(T resource);
         void Remove(T resource);
-
     }
 }
