@@ -9,7 +9,7 @@ namespace TaskTracker.Tests
     public class TasksControllerFixture
     {
         [Test]
-        public void Can_Get_All_Tasks()
+        public void Can_Get_All_Tasks_From_Controller()
         {
             var controller = new TasksController();
             var allTasks = controller.Get().ToList();
@@ -18,7 +18,7 @@ namespace TaskTracker.Tests
         }
 
         [Test]
-        public void Can_Get_Task_By_Id()
+        public void Can_Get_Task_By_Id_From_Controller()
         {
             const int id = 1;
 

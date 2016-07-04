@@ -14,14 +14,14 @@ namespace TaskTracker.tests
         private ProjectsController PController = new ProjectsController();
 
         [Test]
-        public void Can_Get_All_Projects()
+        public void Can_Get_All_Projects_From_Controller()
         {
             var allProjects = PController.Get().ToList();
             Assert.That(allProjects, Has.Count.GreaterThan(0));
         }
 
         [Test]
-        public void Can_Get_Project_By_Id()
+        public void Can_Get_Project_By_Id_From_Controller()
         {
             var allProjects = PController.Get().ToList();
             int i = new Random().Next(0,allProjects.Count - 1);
