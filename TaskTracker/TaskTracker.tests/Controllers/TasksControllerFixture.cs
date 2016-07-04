@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using TaskTracker.Controllers;
 
-namespace TaskTracker.tests.Controllers
+namespace TaskTracker.Tests.Controllers
 {
 
     [TestFixture]

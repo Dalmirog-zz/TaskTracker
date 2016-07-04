@@ -2,7 +2,7 @@
 using NUnit.Framework;
 using TaskTracker.Models;
 
-namespace TaskTracker.tests.Repositories
+namespace TaskTracker.Tests.Repositories
 {
     [TestFixture]
     public class ProjectsRepositoryFixture
