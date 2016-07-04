@@ -1,8 +1,8 @@
-﻿using NUnit.Framework;
-using System.Linq;
+﻿using System.Linq;
+using NUnit.Framework;
 using TaskTracker.Controllers;
 
-namespace TaskTracker.Tests
+namespace TaskTracker.tests.Controllers
 {
 
     [TestFixture]

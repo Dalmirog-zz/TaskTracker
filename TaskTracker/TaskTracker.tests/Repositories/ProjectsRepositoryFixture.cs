@@ -1,13 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using NUnit.Framework;
-using TaskTracker.Controllers;
+﻿using NUnit.Framework;
 using TaskTracker.Models;
 
-namespace TaskTracker.tests
+namespace TaskTracker.tests.Repositories
 {
     [TestFixture]
     public class ProjectsRepositoryFixture

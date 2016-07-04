@@ -60,9 +60,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ProjectsControllerFixture.cs" />
-    <Compile Include="ProjectsRepositoryFixture.cs" />
-    <Compile Include="TasksControllerFixture.cs" />
+    <Compile Include="Controllers\ProjectsControllerFixture.cs" />
+    <Compile Include="Controllers\TagsControllerFixture.cs" />
+    <Compile Include="Repositories\TagsRepositoryFixture.cs" />
+    <Compile Include="Repositories\TasksRepositoryFixture.cs" />
+    <Compile Include="Repositories\ProjectsRepositoryFixture.cs" />
+    <Compile Include="Controllers\TasksControllerFixture.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
