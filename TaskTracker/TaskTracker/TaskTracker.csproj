@@ -131,7 +131,9 @@
     <Compile Include="Models\ProjectsRepository.cs" />
     <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\Tag.cs" />
+    <Compile Include="Models\TagsRepository.cs" />
     <Compile Include="Models\Task.cs" />
+    <Compile Include="Models\TasksRepository.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

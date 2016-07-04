@@ -11,7 +11,12 @@ namespace TaskTracker.Models
 {
     public class ProjectsRepository : IResourceRepository<Project>
     {
-        private IDbConnection db = new SqlConnection(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+        public ProjectsRepository(IDbConnection dbconn)
+        {
+            db = dbconn;
+        }
+
+        private IDbConnection db;
 
         public Project Find(int id)
         {

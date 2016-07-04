@@ -1,12 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
+using System.Data;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Web;
 
 namespace TaskTracker.Models
 {
-    public class TasksRepository : IRepository<Task>
+    public class TasksRepository : IResourceRepository<Task>
     {
+        public TasksRepository(IDbConnection dbconn)
+        {
+            db = dbconn;
+        }
+
+        private IDbConnection db;
+
         public Task Find(int id)
         {
             throw new NotImplementedException();
