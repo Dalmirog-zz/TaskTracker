@@ -7,8 +7,8 @@
     <ProjectGuid>{798870EA-14E9-42F7-8D25-F2F5A86121BC}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>TaskTracker.tests</RootNamespace>
-    <AssemblyName>TaskTracker.tests</AssemblyName>
+    <RootNamespace>TaskTracker.Tests</RootNamespace>
+    <AssemblyName>TaskTracker.Tests</AssemblyName>
     <TargetFrameworkVersion>v4.5.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
   </PropertyGroup>
