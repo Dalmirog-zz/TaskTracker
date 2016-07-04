@@ -18,7 +18,7 @@ namespace TaskTracker.Models
 
         public Tag Find(int id)
         {
-            throw new NotImplementedException();
+            return this.db.Query<Tag>("Select * FROM Tags WHERE Id = @Id ", new { Id = id }).SingleOrDefault();
         }
 
         public List<Tag> GetAll()

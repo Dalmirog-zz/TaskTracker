@@ -20,7 +20,7 @@ namespace TaskTracker.Models
 
         public Task Find(int id)
         {
-            throw new NotImplementedException();
+            return this.db.Query<Task>("Select * FROM Tasks WHERE Id = @Id ", new { Id = id }).SingleOrDefault();
         }
 
         public List<Task> GetAll()

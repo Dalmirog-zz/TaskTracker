@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using System;
+using NUnit.Framework;
 using TaskTracker.Models;
 
 namespace TaskTracker.tests.Repositories
@@ -13,6 +14,16 @@ namespace TaskTracker.tests.Repositories
         {
             var allProjects = Repository.Projects.GetAll();
             Assert.That(allProjects, Has.Count.GreaterThan(0));
+        }
+
+        [Test]
+        public void Can_Get_Project_By_Id_From_Repository()
+        {
+            var allProjects = Repository.Projects.GetAll();
+            int i = new Random().Next(0, allProjects.Count -1);
+            var project = allProjects[i];
+
+            Assert.That(Repository.Projects.Find(project.Id).Name, Is.EqualTo(project.Name));
         }
     }
 }

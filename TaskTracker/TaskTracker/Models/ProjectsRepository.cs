@@ -20,7 +20,7 @@ namespace TaskTracker.Models
 
         public Project Find(int id)
         {
-            throw new NotImplementedException();
+            return this.db.Query<Project>("Select * FROM Projects WHERE Id = @Id ", new {Id = id}).SingleOrDefault();
         }
 
         public List<Project> GetAll()
