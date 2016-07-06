@@ -7,22 +7,22 @@ namespace TaskTracker.Tests.Repositories
     [TestFixture]
     public class TasksRepositoryFixture
     {
-        private Repository Repository = new Repository();
+        private Repository _repository = new Repository();
 
         [Test]
         public void Can_Get_All_Tasks_From_Repository()
         {
-            var allTasks = Repository.Tasks.GetAll();
+            var allTasks = _repository.Tasks.GetAll();
             Assert.That(allTasks, Has.Count.GreaterThan(0));
         }
         [Test]
         public void Can_Get_Tags_By_Id_From_Repository()
         {
-            var allTasks = Repository.Tags.GetAll();
+            var allTasks = _repository.Tags.GetAll();
             int i = new Random().Next(0, allTasks.Count - 1);
-            var Task = allTasks[i];
+            var task = allTasks[i];
 
-            Assert.That(Repository.Tags.Find(Task.Id).Name, Is.EqualTo(Task.Name));
+            Assert.That(_repository.Tags.Find(task.Id).Name, Is.EqualTo(task.Name));
         }
     }
 }
