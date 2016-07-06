@@ -24,5 +24,17 @@ namespace TaskTracker.Tests.Repositories
 
             Assert.That(_repository.Tags.Find(tag.Id).Name, Is.EqualTo(tag.Name));
         }
+        [Test]
+        public void Can_Add_Tag()
+        {
+            var tag = new Tag
+            {
+                Name = "TestTag"
+
+            };
+            var newTag = _repository.Tags.Add(tag);
+            Assert.That(newTag.Id, Is.Not.EqualTo(0));
+            Console.WriteLine("New ID: " + newTag.Id);
+        }
     }
 }

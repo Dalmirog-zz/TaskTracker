@@ -25,5 +25,19 @@ namespace TaskTracker.Tests.Repositories
 
             Assert.That(_repository.Projects.Find(project.Id).Name, Is.EqualTo(project.Name));
         }
+
+        [Test]
+        public void Can_Add_Project()
+        {
+            var project = new Project
+            {
+                 Name = "TestProject",
+                 Description = "TestDescription"
+                
+            };
+            var newProject = _repository.Projects.Add(project);
+            Assert.That(newProject.Id, Is.Not.EqualTo(0));
+            Console.WriteLine("New ID: " + newProject.Id);
+        }
     }
 }

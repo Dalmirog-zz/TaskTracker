@@ -28,7 +28,11 @@ namespace TaskTracker.Models
 
         public Tag Add(Tag resource)
         {
-            throw new NotImplementedException();
+            var sql = "INSERT INTO [dbo].[Tags]([Name])VALUES(@Name);" +
+                      "select CAST(SCOPE_IDENTITY() as int)";
+            var id = this.db.Query<int>(sql, resource).Single();
+            resource.Id = id;
+            return resource;
         }
 
         public Tag Update(Tag resource)
