@@ -1,31 +1,36 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Web;
 using Dapper;
+using TaskTracker.Models;
 
-namespace TaskTracker.Models
+namespace TaskTracker.Controllers
 {
     public class TasksRepository : IResourceRepository<Task>
     {
-        public TasksRepository(IDbConnection dbconn)
+        private string connectionString;
+
+        public TasksRepository(string connectionString)
         {
-            db = dbconn;
+            this.connectionString = connectionString;
         }
-
-        private IDbConnection db;
-
+        
         public Task Find(int id)
         {
-            return this.db.Query<Task>("Select * FROM Tasks WHERE Id = @Id ", new { Id = id }).SingleOrDefault();
+            using (var db = new SqlConnection(connectionString))
+            {
+                return db.Query<Task>("Select * FROM Tasks WHERE Id = @Id ", new {Id = id}).SingleOrDefault();
+            }
         }
 
         public List<Task> GetAll()
         {
-            return this.db.Query<Task>("Select * FROM Tasks").ToList();
+            using (var db = new SqlConnection(connectionString))
+            {
+                return db.Query<Task>("Select * FROM Tasks").ToList();
+            }
         }
 
         public Task Add(Task resource)
