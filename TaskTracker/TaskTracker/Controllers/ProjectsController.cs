@@ -1,13 +1,13 @@
 ﻿using System.Collections.Generic;
-using System.Configuration;
 using System.Web.Http;
+using TaskTracker.Controllers.Repositories;
 using TaskTracker.Models;
 
 namespace TaskTracker.Controllers
 {
     public class ProjectsController : ApiController
     {
-        private readonly ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+        private readonly ProjectsRepository repository = new ProjectsRepository();
 
         // GET: api/Projects
         public List<Project> Get()
@@ -22,12 +22,12 @@ namespace TaskTracker.Controllers
         }
 
         // POST: api/Projects
-        public void Post([FromBody]string value)
+        public void Post([FromBody] string value)
         {
         }
 
         // PUT: api/Projects/5
-        public void Put(int id, [FromBody]string value)
+        public void Put(int id, [FromBody] string value)
         {
         }
 

@@ -1,15 +1,26 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.Data.SqlClient;
 using System.Linq;
 using Dapper;
 using TaskTracker.Models;
 
-namespace TaskTracker.Controllers
+namespace TaskTracker.Controllers.Repositories
 {
     public class ProjectsRepository : IResourceRepository<Project>
     {
+        private const string SqlStringFindTagById = "Select * FROM Projects WHERE Id = @Id ";
+
+        private const string SqlStringFindProjects = "Select * FROM Projects";
+
+        private const string SqlStringInsertProject = "INSERT INTO [dbo].[Projects]([Name],[Description])VALUES(@Name,@Description); select CAST(SCOPE_IDENTITY() as int)";
+
         private readonly string connectionString;
+
+        public ProjectsRepository() : this(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString)
+        {
+        }
 
         public ProjectsRepository(string connectionString)
         {
@@ -18,8 +29,9 @@ namespace TaskTracker.Controllers
 
         public Project Find(int id)
         {
-            using (var db = new SqlConnection(connectionString)) { 
-                return db.Query<Project>("Select * FROM Projects WHERE Id = @Id ", new {Id = id}).SingleOrDefault();
+            using (var db = new SqlConnection(connectionString))
+            {
+                return db.Query<Project>(SqlStringFindTagById, new { Id = id }).SingleOrDefault();
             }
         }
 
@@ -27,7 +39,7 @@ namespace TaskTracker.Controllers
         {
             using (var db = new SqlConnection(connectionString))
             {
-                return db.Query<Project>("Select * FROM Projects").ToList();
+                return db.Query<Project>(SqlStringFindProjects).ToList();
             }
         }
 
@@ -35,8 +47,7 @@ namespace TaskTracker.Controllers
         {
             using (var db = new SqlConnection(connectionString))
             {
-                var sql = "INSERT INTO [dbo].[Projects]([Name],[Description])VALUES(@Name,@Description);" +
-                          "select CAST(SCOPE_IDENTITY() as int)";
+                var sql = SqlStringInsertProject;
                 var id = db.Query<int>(sql, resource).Single();
                 resource.Id = id;
                 return resource;
@@ -45,11 +56,13 @@ namespace TaskTracker.Controllers
 
         public Project Update(Project resource)
         {
+            // TODO: Implement
             throw new NotImplementedException();
         }
 
         public void Remove(Project resource)
         {
+            // TODO: Implement
             throw new NotImplementedException();
         }
     }
