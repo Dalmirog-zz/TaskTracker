@@ -2,7 +2,7 @@
 using System.Configuration;
 using NUnit.Framework;
 using TaskTracker.Models;
-using TaskTracker.Controllers;
+using TaskTracker.Controllers.Repositories;
 
 namespace TaskTracker.Tests.Repositories
 {

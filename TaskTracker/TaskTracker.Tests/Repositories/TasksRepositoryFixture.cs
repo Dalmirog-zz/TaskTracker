@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Configuration;
 using NUnit.Framework;
-using TaskTracker.Controllers;
-using TaskTracker.Models;
+using TaskTracker.Controllers.Repositories;
 
 namespace TaskTracker.Tests.Repositories
 {
@@ -12,16 +11,23 @@ namespace TaskTracker.Tests.Repositories
         [Test]
         public void Can_Get_All_Tasks_From_Repository()
         {
-            TasksRepository repository = new TasksRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+            var repository = new TasksRepository(
+                new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString),
+                new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString));
+
             var allTasks = repository.GetAll();
             Assert.That(allTasks, Has.Count.GreaterThan(0));
         }
+
         [Test]
-        public void Can_Get_Tags_By_Id_From_Repository()
+        public void Can_Get_Tasks_By_Id_From_Repository()
         {
-            TasksRepository repository = new TasksRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+            var repository = new TasksRepository(
+                new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString),
+                new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString));
+
             var allTasks = repository.GetAll();
-            int i = new Random().Next(0, allTasks.Count - 1);
+            var i = new Random().Next(0, allTasks.Count - 1);
             var task = allTasks[i];
 
             Assert.That(repository.Find(task.Id).Name, Is.EqualTo(task.Name));
