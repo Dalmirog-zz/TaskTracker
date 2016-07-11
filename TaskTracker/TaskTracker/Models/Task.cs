@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
+﻿using System.Collections.Generic;
 
 namespace TaskTracker.Models
 {
-    public class Task
+    public class Task : ITask
     {
         public int Id { get; set; }
         public string Name { get; set; }

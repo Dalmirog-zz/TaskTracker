@@ -28,11 +28,66 @@ namespace TaskTracker.Controllers.Repositories
             this.tagRepository = tagRepository;
         }
 
+        private Task TaskConverter(DBTask dbTask)
+        {
+            var project = projectRepository.Find(dbTask.ProjectId);
+
+            var tags = new List<Tag>();
+
+            foreach (var t in dbTask.TagId.Split(','))
+            {
+                tags.Add(tagRepository.Find(Int32.Parse(t)));
+            }
+
+            return new Task()
+            {
+                Id = dbTask.Id,
+                Description = dbTask.Description,
+                Name = dbTask.Name,
+                Project = project,
+                Tags = tags
+            };
+        }
+
+        private List<Task> TaskConverter(List<DBTask> dbTasks)
+        {
+            var allTasks = new List<Task>();
+
+            var allTags = tagRepository.GetAll();
+            var allProjects = projectRepository.GetAll();
+
+            foreach (DBTask dbtask in dbTasks)
+            {
+                var tags = new List<Tag>();
+                var project = allProjects.FirstOrDefault(p => p.Id == dbtask.ProjectId);
+
+                var tagIDs = dbtask.TagId.Split(',');
+
+                foreach (var id in tagIDs)
+                {
+                    tags.Add(allTags.FirstOrDefault(t => t.Id == Int32.Parse(id)));
+                }
+;
+                allTasks.Add(new Task
+                {
+                    Id = dbtask.Id,
+                    Name = dbtask.Name,
+                    Description = dbtask.Description,
+                    Project = project,
+                    Tags = tags
+                });
+            }
+
+            return allTasks;
+        }
+
         public Task Find(int id)
         {
             using (var db = new SqlConnection(connectionString))
             {
-                return db.Query<Task>(SqlStringFindTaskById, new { Id = id }).SingleOrDefault();
+                var dbTask = db.Query<DBTask>(SqlStringFindTaskById, new { Id = id }).SingleOrDefault();
+
+                return TaskConverter(dbTask);
             }
         }
 
@@ -40,7 +95,7 @@ namespace TaskTracker.Controllers.Repositories
         {
             using (var db = new SqlConnection(connectionString))
             {
-                return db.Query<Task>(SqlStringFindTasks).ToList();
+                return TaskConverter(db.Query<DBTask>(SqlStringFindTasks).ToList());
             }
         }
 
