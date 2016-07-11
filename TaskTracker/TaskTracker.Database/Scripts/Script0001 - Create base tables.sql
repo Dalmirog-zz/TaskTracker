@@ -9,7 +9,7 @@ CREATE TABLE [dbo].[Projects](
 CREATE TABLE [dbo].[Tasks](
 	[Id] [int] IDENTITY(1,1) NOT NULL,
 	[ProjectID] [int] NULL,
-	[TagID] [int] NULL,
+	[TagID] [varchar](50) NULL,
 	[Name] [varchar](50) NOT NULL,
 	[Description] [varchar](250) NULL
 ) ON [PRIMARY]
