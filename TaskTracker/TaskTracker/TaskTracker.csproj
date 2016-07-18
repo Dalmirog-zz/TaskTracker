@@ -130,6 +130,8 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Models\DBTask.cs" />
+    <Compile Include="Models\ITask.cs" />
     <Compile Include="Models\Project.cs" />
     <Compile Include="Models\Tag.cs" />
     <Compile Include="Models\Task.cs" />

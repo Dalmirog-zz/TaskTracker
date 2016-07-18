@@ -10,7 +10,7 @@ namespace TaskTracker.Controllers.Repositories
 {
     public class ProjectsRepository : IResourceRepository<Project>
     {
-        private const string SqlStringFindTagById = "Select * FROM Projects WHERE Id = @Id ";
+        private const string SqlStringFindProjectById = "Select * FROM Projects WHERE Id = @Id ";
 
         private const string SqlStringFindProjects = "Select * FROM Projects";
 
@@ -31,7 +31,7 @@ namespace TaskTracker.Controllers.Repositories
         {
             using (var db = new SqlConnection(connectionString))
             {
-                return db.Query<Project>(SqlStringFindTagById, new { Id = id }).SingleOrDefault();
+                return db.Query<Project>(SqlStringFindProjectById, new { Id = id }).SingleOrDefault();
             }
         }
 
