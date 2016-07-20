@@ -35,9 +35,28 @@ namespace TaskTracker.Tests.Repositories
 
             };
             TagsRepository repository = new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
-            var newTag = repository.Add(tag);
+            var newTag = repository.Save(tag);
             Assert.That(newTag.Id, Is.Not.EqualTo(0));
             Console.WriteLine("New ID: " + newTag.Id);
+        }
+
+        [Test]
+        public void Can_Update_Tag()
+        {
+            TagsRepository repository = new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+            var allTags = repository.GetAll();
+            int i = new Random().Next(0, allTags.Count - 1);
+            var tag = allTags[i];
+
+            var updatedValue = "Updated from test";
+
+            tag.Name = updatedValue;
+
+            var updatedTag = repository.Save(tag);
+
+            Assert.That(updatedTag.Name, Is.EqualTo(updatedValue));
+            Assert.That(updatedTag.Id, Is.EqualTo(tag.Id));
+            Console.WriteLine("New Tag Name: " + updatedTag.Name);
         }
     }
 }

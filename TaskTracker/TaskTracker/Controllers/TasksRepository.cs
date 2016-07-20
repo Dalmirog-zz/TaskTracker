@@ -12,6 +12,25 @@ namespace TaskTracker.Controllers.Repositories
     {
         private const string SqlStringFindTasks = "Select * FROM Tasks";
         private const string SqlStringFindTaskById = "Select * FROM Tasks WHERE Id = @Id ";
+        private const string SqlStringInsertTask = @"INSERT INTO [dbo].[Tasks]
+                                                   ([ProjectID]
+                                                   ,[TagID]
+                                                   ,[Name]
+                                                   ,[Description])
+                                             VALUES
+                                                   (@ProjectId
+                                                   ,@TagId
+                                                   ,@Name
+                                                   ,@Description)
+                                            GO;
+                                            Select * FROM Tasks WHERE Id = @Id";
+        private const string SqlStringUpdateTask = @"UPDATE [dbo].[Tasks]
+                                                       SET [ProjectID] = @ProjectID
+                                                          ,[TagID] = @TagId
+                                                          ,[Name] = @Name
+                                                          ,[Description] = @Description
+                                                     WHERE Id = @Id;
+                                                    Select * FROM Tasks WHERE Id = @Id";
 
         private readonly string connectionString;
         private readonly IResourceRepository<Project> projectRepository;
@@ -28,6 +47,70 @@ namespace TaskTracker.Controllers.Repositories
             this.tagRepository = tagRepository;
         }
 
+        public Task Find(int id)
+        {
+            using (var db = new SqlConnection(connectionString))
+            {
+                var dbTask = db.Query<DBTask>(SqlStringFindTaskById, new { Id = id }).SingleOrDefault();
+
+                return TaskConverter(dbTask);
+            }
+        }
+
+        public List<Task> GetAll()
+        {
+            using (var db = new SqlConnection(connectionString))
+            {
+                return TaskConverter(db.Query<DBTask>(SqlStringFindTasks).ToList());
+            }
+        }
+
+        public Task Save(Task resource)
+        {
+            var sql = "";
+
+            if (resource.Id == 0) // INSERT task
+            {
+                sql = SqlStringInsertTask;
+            }
+            else // UPDATE task
+            {
+                sql = SqlStringUpdateTask;
+            }
+
+            //Persisting project in task
+            resource.Project = projectRepository.Save(resource.Project);
+
+            //Persisting Tags in task
+            var pTags = new List<Tag>();
+
+            foreach (Tag t in resource.Tags)
+            {
+                pTags.Add(tagRepository.Save(t));
+            }
+
+            resource.Tags = pTags;
+
+            //Converting Task to DBTask to send to SQL
+            var dbTask = TaskConverter(resource);
+
+            using (var db = new SqlConnection(connectionString))
+            {
+                //Sending [DBtask] to SQL and re-converting the returned value to [Task]
+                var task = TaskConverter(db.Query<DBTask>(sql, dbTask).Single());
+                    
+                //Returning the task
+                return task;
+            }
+            
+        }
+
+        public void Remove(Task resource)
+        {
+            // TODO: Implement
+            throw new NotImplementedException();
+        }
+
         private Task TaskConverter(DBTask dbTask)
         {
             var project = projectRepository.Find(dbTask.ProjectId);
@@ -39,13 +122,39 @@ namespace TaskTracker.Controllers.Repositories
                 tags.Add(tagRepository.Find(Int32.Parse(t)));
             }
 
-            return new Task()
+            return new Task
             {
                 Id = dbTask.Id,
                 Description = dbTask.Description,
                 Name = dbTask.Name,
                 Project = project,
                 Tags = tags
+            };
+        }
+
+        private DBTask TaskConverter(Task task)
+        {
+            //I'm sooo sure there's a prettier way to get all the IDs in Task.tags.ID insto a single comma sepparated string.
+            var tagsString = "";
+
+            foreach (var t in task.Tags)
+            {
+                if (string.IsNullOrWhiteSpace(tagsString))
+                {
+                    tagsString = t.Id.ToString();
+                }
+                else { 
+                    tagsString = string.Join(",", tagsString,t.Id);
+                }
+            }
+
+            return new DBTask
+            {
+                Id = task.Id,
+                Description = task.Description,
+                Name = task.Name,
+                TagId = tagsString,
+                ProjectId = task.Project.Id
             };
         }
 
@@ -79,42 +188,6 @@ namespace TaskTracker.Controllers.Repositories
             }
 
             return allTasks;
-        }
-
-        public Task Find(int id)
-        {
-            using (var db = new SqlConnection(connectionString))
-            {
-                var dbTask = db.Query<DBTask>(SqlStringFindTaskById, new { Id = id }).SingleOrDefault();
-
-                return TaskConverter(dbTask);
-            }
-        }
-
-        public List<Task> GetAll()
-        {
-            using (var db = new SqlConnection(connectionString))
-            {
-                return TaskConverter(db.Query<DBTask>(SqlStringFindTasks).ToList());
-            }
-        }
-
-        public Task Add(Task resource)
-        {
-            // TODO: Implement
-            throw new NotImplementedException();
-        }
-
-        public Task Update(Task resource)
-        {
-            // TODO: Implement
-            throw new NotImplementedException();
-        }
-
-        public void Remove(Task resource)
-        {
-            // TODO: Implement
-            throw new NotImplementedException();
         }
     }
 }

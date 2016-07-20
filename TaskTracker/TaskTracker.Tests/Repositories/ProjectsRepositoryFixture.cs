@@ -41,9 +41,29 @@ namespace TaskTracker.Tests.Repositories
             };
             ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
 
-            var newProject = repository.Add(project);
+            var newProject = repository.Save(project);
             Assert.That(newProject.Id, Is.Not.EqualTo(0));
             Console.WriteLine("New ID: " + newProject.Id);
+        }
+
+        [Test]
+        public void Can_Update_Project()
+        {
+            ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+
+            var allProjects = repository.GetAll();
+            int i = new Random().Next(0, allProjects.Count - 1);
+            var project = allProjects[i];
+
+            var updatedValue = "Updated from test";
+
+            project.Description = updatedValue;
+
+            var updatedProject = repository.Save(project);
+
+            Assert.That(updatedProject.Description, Is.EqualTo(updatedValue));
+            Assert.That(updatedProject.Id, Is.EqualTo(project.Id));
+            Console.WriteLine("New Description: " + updatedProject.Description);
         }
     }
 }
