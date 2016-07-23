@@ -19,51 +19,51 @@ namespace TaskTracker.Tests.Repositories
         }
 
         [Test]
-        public void Can_Get_Project_By_Id_From_Repository()
+        public void Can_Create_Project_And_Get_By_ID_From_Repository()
         {
             ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
 
-            var allProjects = repository.GetAll();
-            int i = new Random().Next(0, allProjects.Count -1);
-            var project = allProjects[i];
+            var testValue = "TestValue";
 
-            Assert.That(repository.Find(project.Id).Name, Is.EqualTo(project.Name));
-        }
-
-        [Test]
-        public void Can_Add_Project()
-        {
             var project = new Project
             {
-                 Name = "TestProject",
-                 Description = "TestDescription"
-                
+                 Name = testValue,
+                 Description = testValue
             };
-            ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
 
             var newProject = repository.Save(project);
+
             Assert.That(newProject.Id, Is.Not.EqualTo(0));
-            Console.WriteLine("New ID: " + newProject.Id);
+            Assert.That(newProject.Name, Is.EqualTo(testValue));
+
+            var projectByID = repository.Find(newProject.Id);
+
+            Assert.That(projectByID.Id, Is.EqualTo(newProject.Id));
+            Assert.That(projectByID.Name, Is.EqualTo(testValue));
         }
 
         [Test]
-        public void Can_Update_Project()
+        public void Can_Create_Project_And_Update_From_Repository()
         {
             ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
 
-            var allProjects = repository.GetAll();
-            int i = new Random().Next(0, allProjects.Count - 1);
-            var project = allProjects[i];
+            var testValue = "TestValue";
+            var updatedValue = "UpdatedValue";
 
-            var updatedValue = "Updated from test";
+            var project = new Project
+            {
+                Name = testValue,
+                Description = testValue
+            };
 
-            project.Description = updatedValue;
+            var newProject = repository.Save(project);
 
-            var updatedProject = repository.Save(project);
+            newProject.Name = updatedValue;
 
-            Assert.That(updatedProject.Description, Is.EqualTo(updatedValue));
-            Assert.That(updatedProject.Id, Is.EqualTo(project.Id));
-            Console.WriteLine("New Description: " + updatedProject.Description);
+            var updatedProject = repository.Save(newProject);
+
+            Assert.That(updatedProject.Id, Is.EqualTo(newProject.Id));
+            Assert.That(updatedProject.Name, Is.EqualTo(updatedValue));
         }
     }
 }

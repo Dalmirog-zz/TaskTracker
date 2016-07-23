@@ -2,6 +2,7 @@
 using System.Configuration;
 using NUnit.Framework;
 using TaskTracker.Controllers.Repositories;
+using TaskTracker.Models;
 
 namespace TaskTracker.Tests.Repositories
 {
@@ -20,37 +21,53 @@ namespace TaskTracker.Tests.Repositories
         }
 
         [Test]
-        public void Can_Get_Tasks_By_Id_From_Repository()
+        public void Can_Create_Task_And_Get_By_ID_From_Repository()
         {
             var repository = new TasksRepository(
                 new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString),
                 new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString));
 
-            var allTasks = repository.GetAll();
-            var i = new Random().Next(0, allTasks.Count - 1);
-            var task = allTasks[i];
+            var testValue = "TestValue";
 
-            Assert.That(repository.Find(task.Id).Name, Is.EqualTo(task.Name));
+            var task = new Task
+            {
+                Name = "TestValue"
+            };
+
+            var newTask = repository.Save(task);
+
+            Assert.That(newTask.Id, Is.Not.EqualTo(0));
+            Assert.That(newTask.Name, Is.EqualTo(testValue));
+
+            var taskByID = repository.Find(newTask.Id);
+
+            Assert.That(taskByID.Id, Is.EqualTo(newTask.Id));
+            Assert.That(taskByID.Name, Is.EqualTo(testValue));
         }
 
         [Test]
-        public void Can_Save_Existing_Task()
+        public void Can_Create_Task_And_Update_From_Repository()
         {
             var repository = new TasksRepository(
                 new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString),
                 new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString));
 
-            var allTasks = repository.GetAll();
-            var i = new Random().Next(0, allTasks.Count - 1);
-            var task = allTasks[i];
+            var testValue = "TestValue";
+            var updatedValue = "UpdatedValue";
 
-            var updatedValue = "Updated from test";
-            task.Description = updatedValue;
+            var task = new Task
+            {
+                Name = "TestValue"
+            };
 
-            var updatedTask = repository.Save(task);
+            var newTask = repository.Save(task);
 
-            Assert.That(updatedTask.Description, Is.EqualTo(task.Description));
-            Assert.That(updatedTask.Id, Is.EqualTo(task.Id));
+            newTask.Name = updatedValue;
+
+            var updatedTask = repository.Save(newTask);
+
+            Assert.That(updatedTask.Id, Is.EqualTo(newTask.Id));
+            Assert.That(updatedTask.Name, Is.EqualTo(updatedValue));
         }
     }
 }
