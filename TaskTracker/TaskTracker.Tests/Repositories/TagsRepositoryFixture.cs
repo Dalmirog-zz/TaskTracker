@@ -16,28 +16,48 @@ namespace TaskTracker.Tests.Repositories
             var allTags = repository.GetAll();
             Assert.That(allTags, Has.Count.GreaterThan(0));
         }
+
         [Test]
-        public void Can_Get_Tags_By_Id_From_Repository()
+        public void Can_Create_Task_And_Get_By_ID_From_Repository()
         {
             TagsRepository repository = new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
-            var allTags = repository.GetAll();
-            int i = new Random().Next(0, allTags.Count - 1);
-            var tag = allTags[i];
 
-            Assert.That(repository.Find(tag.Id).Name, Is.EqualTo(tag.Name));
-        }
-        [Test]
-        public void Can_Add_Tag()
-        {
+            var testValue = "TestTag";
             var tag = new Tag
             {
-                Name = "TestTag"
+                Name = testValue
 
             };
-            TagsRepository repository = new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
-            var newTag = repository.Add(tag);
+            var newTag = repository.Save(tag);
+
             Assert.That(newTag.Id, Is.Not.EqualTo(0));
-            Console.WriteLine("New ID: " + newTag.Id);
+            Assert.That(newTag.Name, Is.EqualTo(testValue));
+
+            var tagByID = repository.Find(newTag.Id);
+
+            Assert.That(tagByID.Id, Is.EqualTo(newTag.Id));
+            Assert.That(tagByID.Name, Is.EqualTo(testValue));
+        }
+
+        [Test]
+        public void Can_Create_Task_And_Update_From_Repository()
+        {
+            TagsRepository repository = new TagsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+
+            var testValue = "TestTag";
+            var updatedValue = "UpdatedTag";
+            var tag = new Tag
+            {
+                Name = testValue
+            };
+            var newTag = repository.Save(tag);
+
+            newTag.Name = updatedValue;
+
+            var updatedTag = repository.Save(newTag);
+
+            Assert.That(updatedTag.Id, Is.EqualTo(newTag.Id));
+            Assert.That(updatedTag.Name, Is.EqualTo(updatedValue));
         }
     }
 }
