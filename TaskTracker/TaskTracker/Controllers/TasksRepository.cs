@@ -21,9 +21,8 @@ namespace TaskTracker.Controllers.Repositories
                                                    (@ProjectId
                                                    ,@TagId
                                                    ,@Name
-                                                   ,@Description)
-                                            GO;
-                                            Select * FROM Tasks WHERE Id = @Id";
+                                                   ,@Description);
+                                            select CAST(SCOPE_IDENTITY() as int)";
         private const string SqlStringUpdateTask = @"UPDATE [dbo].[Tasks]
                                                        SET [ProjectID] = @ProjectID
                                                           ,[TagID] = @TagId
@@ -79,14 +78,17 @@ namespace TaskTracker.Controllers.Repositories
             }
 
             //Persisting project in task
-            resource.Project = projectRepository.Save(resource.Project);
-
+            if (resource.Project != null) { 
+                resource.Project = projectRepository.Save(resource.Project);
+            }
             //Persisting Tags in task
             var pTags = new List<Tag>();
 
-            foreach (Tag t in resource.Tags)
-            {
-                pTags.Add(tagRepository.Save(t));
+            if(resource.Tags != null) { 
+                foreach (Tag t in resource.Tags)
+                {
+                    pTags.Add(tagRepository.Save(t));
+                }
             }
 
             resource.Tags = pTags;
@@ -97,10 +99,10 @@ namespace TaskTracker.Controllers.Repositories
             using (var db = new SqlConnection(connectionString))
             {
                 //Sending [DBtask] to SQL and re-converting the returned value to [Task]
-                var task = TaskConverter(db.Query<DBTask>(sql, dbTask).Single());
-                    
+                var taskID = db.Query<int>(sql, dbTask).Single();
+                resource.Id = taskID;    
                 //Returning the task
-                return task;
+                return resource;
             }
             
         }
@@ -116,12 +118,14 @@ namespace TaskTracker.Controllers.Repositories
             var project = projectRepository.Find(dbTask.ProjectId);
 
             var tags = new List<Tag>();
-
-            foreach (var t in dbTask.TagId.Split(','))
+            if (!string.IsNullOrEmpty(dbTask.TagId))
             {
-                tags.Add(tagRepository.Find(Int32.Parse(t)));
+                foreach (var t in dbTask.TagId.Split(','))
+                {
+                    tags.Add(tagRepository.Find(Int32.Parse(t)));
+                }
             }
-
+            
             return new Task
             {
                 Id = dbTask.Id,
@@ -136,25 +140,38 @@ namespace TaskTracker.Controllers.Repositories
         {
             //I'm sooo sure there's a prettier way to get all the IDs in Task.tags.ID insto a single comma sepparated string.
             var tagsString = "";
+            int projectId = 0;
+            string description = "";
 
-            foreach (var t in task.Tags)
-            {
-                if (string.IsNullOrWhiteSpace(tagsString))
+            if(task.Tags.Count == 0) { 
+                foreach (var t in task.Tags)
                 {
-                    tagsString = t.Id.ToString();
+                    if (string.IsNullOrWhiteSpace(tagsString))
+                    {
+                        tagsString = t.Id.ToString();
+                    }
+                    else { 
+                        tagsString = string.Join(",", tagsString,t.Id);
+                    }
                 }
-                else { 
-                    tagsString = string.Join(",", tagsString,t.Id);
-                }
+            }
+
+            if (task.Project != null)
+            {
+                projectId = task.Project.Id;
+            }
+            if (task.Description != null)
+            {
+                description = task.Description;
             }
 
             return new DBTask
             {
                 Id = task.Id,
-                Description = task.Description,
+                Description = description,
                 Name = task.Name,
                 TagId = tagsString,
-                ProjectId = task.Project.Id
+                ProjectId = projectId
             };
         }
 
@@ -168,15 +185,21 @@ namespace TaskTracker.Controllers.Repositories
             foreach (DBTask dbtask in dbTasks)
             {
                 var tags = new List<Tag>();
-                var project = allProjects.FirstOrDefault(p => p.Id == dbtask.ProjectId);
+                var project = new Project();
 
-                var tagIDs = dbtask.TagId.Split(',');
-
-                foreach (var id in tagIDs)
+                if (!string.IsNullOrEmpty(dbtask.ProjectId.ToString()))
                 {
-                    tags.Add(allTags.FirstOrDefault(t => t.Id == Int32.Parse(id)));
+                    project = allProjects.FirstOrDefault(p => p.Id == dbtask.ProjectId);
                 }
-;
+
+                if (!string.IsNullOrEmpty(dbtask.TagId)) { 
+                    var tagIDs = dbtask.TagId.Split(',');
+
+                    foreach (var id in tagIDs)
+                    {
+                        tags.Add(allTags.FirstOrDefault(t => t.Id == Int32.Parse(id)));
+                    }
+                }
                 allTasks.Add(new Task
                 {
                     Id = dbtask.Id,
