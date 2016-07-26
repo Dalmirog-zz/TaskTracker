@@ -31,6 +31,8 @@ namespace TaskTracker.Controllers.Repositories
                                                      WHERE Id = @Id;
                                                     Select * FROM Tasks WHERE Id = @Id";
 
+        private const string SqlStringRemoveTask = "Delete FROM tasks where Id = @Id";
+
         private readonly string connectionString;
         private readonly IResourceRepository<Project> projectRepository;
         private readonly IResourceRepository<Tag> tagRepository;
@@ -52,7 +54,14 @@ namespace TaskTracker.Controllers.Repositories
             {
                 var dbTask = db.Query<DBTask>(SqlStringFindTaskById, new { Id = id }).SingleOrDefault();
 
-                return TaskConverter(dbTask);
+                if (dbTask != null)
+                {
+                    return TaskConverter(dbTask);
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -107,10 +116,19 @@ namespace TaskTracker.Controllers.Repositories
             
         }
 
+        public void Remove(int Id)
+        {
+            using (var db = new SqlConnection(connectionString))
+            {
+                db.Query<Tag>(SqlStringRemoveTask, new { Id = Id });
+            }
+        }
         public void Remove(Task resource)
         {
-            // TODO: Implement
-            throw new NotImplementedException();
+            using (var db = new SqlConnection(connectionString))
+            {
+                db.Query<Tag>(SqlStringRemoveTask,resource);
+            }
         }
 
         private Task TaskConverter(DBTask dbTask)
