@@ -65,5 +65,28 @@ namespace TaskTracker.Tests.Repositories
             Assert.That(updatedProject.Id, Is.EqualTo(newProject.Id));
             Assert.That(updatedProject.Name, Is.EqualTo(updatedValue));
         }
+
+        [Test]
+        public void Can_Create_Project_And_Remove_From_Repository()
+        {
+            ProjectsRepository repository = new ProjectsRepository(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString);
+
+            var testValue = "TestValue";
+
+            var project = new Project
+            {
+                Name = testValue,
+                Description = testValue
+            };
+
+            var newProject = repository.Save(project);
+
+            Assert.That(newProject.Id, Is.Not.EqualTo(0));
+            Assert.That(newProject.Name, Is.EqualTo(testValue));
+
+            repository.Remove(newProject);
+
+            Assert.That(repository.Find(newProject.Id),Is.Null);
+        }
     }
 }

@@ -18,6 +18,8 @@ namespace TaskTracker.Controllers.Repositories
 
         private const string SqlStringUpdateProject = "UPDATE [dbo].[Projects] SET [Name] = @Name ,[Description] = @Description WHERE Id = @Id ; Select * FROM Projects WHERE Id = @Id ";
 
+        private const string SqlStringRemoveProject = "Delete FROM Projects WHERE Id = @Id";
+
         private readonly string connectionString;
 
         public ProjectsRepository() : this(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString)
@@ -66,8 +68,18 @@ namespace TaskTracker.Controllers.Repositories
 
         public void Remove(Project resource)
         {
-            // TODO: Implement
-            throw new NotImplementedException();
+            using (var db = new SqlConnection(connectionString))
+            {
+                db.Query<Tag>(SqlStringRemoveProject, resource);
+            }
+        }
+
+        public void Remove(int Id)
+        {
+            using (var db = new SqlConnection(connectionString))
+            {
+                db.Query<Tag>(SqlStringRemoveProject, new { Id = Id });
+            }
         }
     }
 }
