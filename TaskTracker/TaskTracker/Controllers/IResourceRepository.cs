@@ -8,5 +8,6 @@ namespace TaskTracker.Controllers
         List<T> GetAll();
         T Save(T resource);
         void Remove(T resource);
+        void Remove(int Id);
     }
 }
