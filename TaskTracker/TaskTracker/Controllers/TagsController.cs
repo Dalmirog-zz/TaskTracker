@@ -1,4 +1,6 @@
 ﻿using System.Collections.Generic;
+using System.Net;
+using System.Net.Http;
 using System.Web.Http;
 using TaskTracker.Controllers.Repositories;
 using TaskTracker.Models;
@@ -32,8 +34,18 @@ namespace TaskTracker.Controllers
         }
 
         // DELETE: api/Tags/5
-        public void Delete(int id)
+        public HttpResponseMessage Delete(int id)
         {
+            try
+            {
+                repository.Remove(id);
+            }
+            catch
+            {
+                return Request.CreateResponse(HttpStatusCode.Conflict);
+            }
+
+            return Request.CreateResponse(HttpStatusCode.OK);
         }
     }
 }

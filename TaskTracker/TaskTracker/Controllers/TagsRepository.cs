@@ -17,7 +17,7 @@ namespace TaskTracker.Controllers.Repositories
 
         private const string SqlStringRemoveTag = "Delete FROM Tags WHERE Id = @Id";
 
-        private readonly string connectionString;
+        private readonly string _connectionString;
 
         public TagsRepository() : this(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString)
         {
@@ -25,12 +25,12 @@ namespace TaskTracker.Controllers.Repositories
 
         public TagsRepository(string connectionString)
         {
-            this.connectionString = connectionString;
+            this._connectionString = connectionString;
         }
 
         public Tag Find(int id)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 return db.Query<Tag>(SqlStringFindTagById, new { Id = id }).SingleOrDefault();
             }
@@ -38,7 +38,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public List<Tag> GetAll()
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 return db.Query<Tag>(SqlStringFindTags).ToList();
 
@@ -47,7 +47,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public Tag Save(Tag resource)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 if (resource.Id == 0)
                 {
@@ -65,7 +65,7 @@ namespace TaskTracker.Controllers.Repositories
         }
         public void Remove(Tag resource)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 db.Query<Tag>(SqlStringRemoveTag, resource);
             }
@@ -73,14 +73,11 @@ namespace TaskTracker.Controllers.Repositories
 
         public void Remove(int Id)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 db.Query<Tag>(SqlStringRemoveTag, new { Id = Id });
             }
         }
-
-
-
 
     }
 }

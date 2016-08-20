@@ -20,7 +20,7 @@ namespace TaskTracker.Controllers.Repositories
 
         private const string SqlStringRemoveProject = "Delete FROM Projects WHERE Id = @Id";
 
-        private readonly string connectionString;
+        private readonly string _connectionString;
 
         public ProjectsRepository() : this(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString)
         {
@@ -28,12 +28,12 @@ namespace TaskTracker.Controllers.Repositories
 
         public ProjectsRepository(string connectionString)
         {
-            this.connectionString = connectionString;
+            this._connectionString = connectionString;
         }
 
         public Project Find(int id)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 return db.Query<Project>(SqlStringFindProjectById, new { Id = id }).SingleOrDefault();
             }
@@ -41,7 +41,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public List<Project> GetAll()
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 return db.Query<Project>(SqlStringFindProjects).ToList();
             }
@@ -49,7 +49,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public Project Save(Project resource)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 if (resource.Id == 0)
                 {
@@ -68,7 +68,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public void Remove(Project resource)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 db.Query<Tag>(SqlStringRemoveProject, resource);
             }
@@ -76,7 +76,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public void Remove(int Id)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 db.Query<Tag>(SqlStringRemoveProject, new { Id = Id });
             }

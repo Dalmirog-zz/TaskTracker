@@ -33,9 +33,9 @@ namespace TaskTracker.Controllers.Repositories
 
         private const string SqlStringRemoveTask = "Delete FROM tasks where Id = @Id";
 
-        private readonly string connectionString;
-        private readonly IResourceRepository<Project> projectRepository;
-        private readonly IResourceRepository<Tag> tagRepository;
+        private readonly string _connectionString;
+        private readonly IResourceRepository<Project> _projectRepository;
+        private readonly IResourceRepository<Tag> _tagRepository;
 
         public TasksRepository(IResourceRepository<Project> projectRepository, IResourceRepository<Tag> tagRepository) : this(ConfigurationManager.ConnectionStrings["TaskTracker"].ConnectionString, projectRepository, tagRepository)
         {
@@ -43,14 +43,14 @@ namespace TaskTracker.Controllers.Repositories
 
         public TasksRepository(string connectionString, IResourceRepository<Project> projectRepository, IResourceRepository<Tag> tagRepository)
         {
-            this.connectionString = connectionString;
-            this.projectRepository = projectRepository;
-            this.tagRepository = tagRepository;
+            this._connectionString = connectionString;
+            this._projectRepository = projectRepository;
+            this._tagRepository = tagRepository;
         }
 
         public Task Find(int id)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 var dbTask = db.Query<DBTask>(SqlStringFindTaskById, new { Id = id }).SingleOrDefault();
 
@@ -67,7 +67,7 @@ namespace TaskTracker.Controllers.Repositories
 
         public List<Task> GetAll()
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 return TaskConverter(db.Query<DBTask>(SqlStringFindTasks).ToList());
             }
@@ -88,7 +88,7 @@ namespace TaskTracker.Controllers.Repositories
 
             //Persisting project in task
             if (resource.Project != null) { 
-                resource.Project = projectRepository.Save(resource.Project);
+                resource.Project = _projectRepository.Save(resource.Project);
             }
             //Persisting Tags in task
             var pTags = new List<Tag>();
@@ -96,7 +96,7 @@ namespace TaskTracker.Controllers.Repositories
             if(resource.Tags != null) { 
                 foreach (Tag t in resource.Tags)
                 {
-                    pTags.Add(tagRepository.Save(t));
+                    pTags.Add(_tagRepository.Save(t));
                 }
             }
 
@@ -105,7 +105,7 @@ namespace TaskTracker.Controllers.Repositories
             //Converting Task to DBTask to send to SQL
             var dbTask = TaskConverter(resource);
 
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 //Sending [DBtask] to SQL and re-converting the returned value to [Task]
                 var taskID = db.Query<int>(sql, dbTask).Single();
@@ -118,14 +118,14 @@ namespace TaskTracker.Controllers.Repositories
 
         public void Remove(int Id)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 db.Query<Tag>(SqlStringRemoveTask, new { Id = Id });
             }
         }
         public void Remove(Task resource)
         {
-            using (var db = new SqlConnection(connectionString))
+            using (var db = new SqlConnection(_connectionString))
             {
                 db.Query<Tag>(SqlStringRemoveTask,resource);
             }
@@ -133,14 +133,14 @@ namespace TaskTracker.Controllers.Repositories
 
         private Task TaskConverter(DBTask dbTask)
         {
-            var project = projectRepository.Find(dbTask.ProjectId);
+            var project = _projectRepository.Find(dbTask.ProjectId);
 
             var tags = new List<Tag>();
             if (!string.IsNullOrEmpty(dbTask.TagId))
             {
                 foreach (var t in dbTask.TagId.Split(','))
                 {
-                    tags.Add(tagRepository.Find(Int32.Parse(t)));
+                    tags.Add(_tagRepository.Find(Int32.Parse(t)));
                 }
             }
             
@@ -197,8 +197,8 @@ namespace TaskTracker.Controllers.Repositories
         {
             var allTasks = new List<Task>();
 
-            var allTags = tagRepository.GetAll();
-            var allProjects = projectRepository.GetAll();
+            var allTags = _tagRepository.GetAll();
+            var allProjects = _projectRepository.GetAll();
 
             foreach (DBTask dbtask in dbTasks)
             {
