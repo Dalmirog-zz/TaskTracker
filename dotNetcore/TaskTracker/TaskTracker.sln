@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{E9562D88-EC6F-43BA-87DE-B2C22C5EDD8A}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{84B523D1-5328-4359-9EF3-F8AF446BF596}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "TaskTracker", "src\TaskTracker\TaskTracker.xproj", "{F59C52EC-461C-4C85-AA83-4240D0D31FBF}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F59C52EC-461C-4C85-AA83-4240D0D31FBF}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F59C52EC-461C-4C85-AA83-4240D0D31FBF}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F59C52EC-461C-4C85-AA83-4240D0D31FBF}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F59C52EC-461C-4C85-AA83-4240D0D31FBF}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{F59C52EC-461C-4C85-AA83-4240D0D31FBF} = {E9562D88-EC6F-43BA-87DE-B2C22C5EDD8A}
+	EndGlobalSection
+EndGlobal
