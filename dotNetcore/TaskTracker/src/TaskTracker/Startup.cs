@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
 using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using TaskTracker.Services;
@@ -44,13 +45,21 @@ namespace TaskTracker
 
             app.UseFileServer();
 
-            app.UseMvcWithDefaultRoute();
+            app.UseMvc(ConfigureRoute);
 
             app.Run(async (context) =>
             {
                 var greeting = greeter.GetGreeting();
                 await context.Response.WriteAsync(greeting);
             });
+        }
+
+        private void ConfigureRoute(IRouteBuilder routBuilder)
+        {
+            // /Home/Index
+
+            routBuilder.MapRoute("Default",
+                "{controller=Home}/{action=Index}/{id?}");
         }
 
         // Entry point for the application.
