@@ -1,15 +1,22 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.AspNet.Mvc;
+using TaskTracker.Models;
+using TaskTracker.Services;
 
 namespace TaskTracker.Controllers
 {
-    public class HomeController
+    public class HomeController : Controller
     {
-        public string Index()
+        private IRestaurantData _restraurantData;
+
+        public HomeController(IRestaurantData restaurantData)
         {
-            return "Hello, from a controller!";
+            _restraurantData = restaurantData;
+        }
+        public ViewResult Index()
+        {
+            var model = _restraurantData.GetAll();
+
+            return View(model);
         }
     }
 }

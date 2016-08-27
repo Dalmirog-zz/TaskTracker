@@ -24,8 +24,9 @@ namespace TaskTracker
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-            services.AddSingleton(provider => Configuration);
-            services.AddSingleton<IGreeter, Greeter>();
+            services.AddSingleton(provider => Configuration); 
+            services.AddSingleton<IGreeter, Greeter>(); //SINGLETON: Only one instance of the object will be created and It'll be shared across HTTP requests.
+            services.AddScoped<IRestaurantData, InMemotyRestaurantData>(); //Each HTTP request will have its own object instance.
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -56,8 +57,6 @@ namespace TaskTracker
 
         private void ConfigureRoute(IRouteBuilder routBuilder)
         {
-            // /Home/Index
-
             routBuilder.MapRoute("Default",
                 "{controller=Home}/{action=Index}/{id?}");
         }
