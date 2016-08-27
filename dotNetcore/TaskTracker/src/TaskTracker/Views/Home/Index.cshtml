@@ -1,18 +1,20 @@
-﻿@model IEnumerable<TaskTracker.Models.Restaurant>
+﻿@using TaskTracker.ViewModels
+@model TaskTracker.ViewModels.HomePageViewModel
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
     <title>Home</title>
 </head>
 <body>
     <h1>Welcome!</h1>
-<table>
-    @foreach(var restaurant in Model)
-    {
-        <tr>
-            <td>@restaurant.Id</td>
-            <td>@restaurant.Name</td>
-        </tr>
-    }
-</table>
+    <h3>@Model.CurrentGreeting</h3>
+    <table>
+        @foreach(var restaurant in Model.Restaurants)
+        {
+            <tr>
+                <td>@restaurant.Id</td>
+                <td>@restaurant.Name</td>
+            </tr>
+        }
+    </table>
 </body>
 </html>

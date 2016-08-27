@@ -1,8 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using TaskTracker.Models;
+﻿using System.Collections.Generic;
+using TaskTracker.Entities;
 
 namespace TaskTracker.Services
 {

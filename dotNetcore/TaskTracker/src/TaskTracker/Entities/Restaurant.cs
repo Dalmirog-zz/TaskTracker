@@ -1,4 +1,4 @@
-﻿namespace TaskTracker.Models
+﻿namespace TaskTracker.Entities
 {
     public class Restaurant
     {
