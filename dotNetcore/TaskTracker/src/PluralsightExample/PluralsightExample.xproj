@@ -7,8 +7,8 @@
 
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.Props" Condition="'$(VSToolsPath)' != ''" />
   <PropertyGroup Label="Globals">
-    <ProjectGuid>189fac8f-8fda-4465-834e-9c0a8c584012</ProjectGuid>
-    <RootNamespace>TaskTracker</RootNamespace>
+    <ProjectGuid>f59c52ec-461c-4c85-aa83-4240d0d31fbf</ProjectGuid>
+    <RootNamespace>PluralsightExample</RootNamespace>
     <BaseIntermediateOutputPath Condition="'$(BaseIntermediateOutputPath)'=='' ">..\..\artifacts\obj\$(MSBuildProjectName)</BaseIntermediateOutputPath>
     <OutputPath Condition="'$(OutputPath)'=='' ">..\..\artifacts\bin\$(MSBuildProjectName)\</OutputPath>
   </PropertyGroup>
